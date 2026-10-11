@@ -40,6 +40,15 @@ export function resolveProvider(
     };
 }
 
+/**
+ * API key to use for `provider`: a local OpenAI-compatible server (the `custom` provider) usually has no
+ * key at all, but the OpenAI SDK refuses to start without one — a placeholder goes into the
+ * `Authorization` header, which such servers ignore. Empty for every other provider without a key.
+ */
+export function effectiveApiKey(provider: string | undefined, apiKey: string): string {
+    return apiKey || (provider === 'custom' ? 'no-key' : '');
+}
+
 export interface LlmAgentOptions {
     provider: Provider;
     apiKey: string;
@@ -63,7 +72,9 @@ export interface LlmAgentOptions {
  */
 export class LlmAgent {
     public readonly provider: 'openai' | 'anthropic';
-    public readonly model: string;
+    /** Configured model; empty means "ask the server" (see {@link ensureModel}). */
+    private configuredModel: string;
+    private modelLookup: Promise<string> | null = null;
 
     private readonly systemPrompt: string;
     private readonly maxTokens: number;
@@ -77,7 +88,7 @@ export class LlmAgent {
 
     constructor(opts: LlmAgentOptions) {
         this.provider = opts.provider === 'anthropic' ? 'anthropic' : 'openai';
-        this.model = opts.model;
+        this.configuredModel = (opts.model || '').trim();
         this.systemPrompt = opts.systemPrompt || '';
         this.maxTokens = opts.maxTokens || 1024;
         this.tools = opts.tools || [];
@@ -91,6 +102,44 @@ export class LlmAgent {
         }
     }
 
+    /** The model requests go to — empty until {@link ensureModel} has looked it up, if none was configured. */
+    public get model(): string {
+        return this.configuredModel;
+    }
+
+    /**
+     * Make sure there is a model to send. A local OpenAI-compatible server (Ollama, LM Studio, llama.cpp
+     * server, …) is usually set up with the `custom` provider and no model typed in — and sending
+     * `"model": ""` gets a 400 from the server ("unknown provider for model" and the like) that says
+     * nothing about the real cause. So an empty model is looked up once from the server's `/models` list
+     * (with one model loaded, that is the one), and a server that lists nothing gets a clear error.
+     */
+    private async ensureModel(): Promise<string> {
+        if (this.configuredModel) {
+            return this.configuredModel;
+        }
+        this.modelLookup ||= this.listModels()
+            .then(models => {
+                if (!models.length) {
+                    throw new Error('no model configured and the server lists none');
+                }
+                this.configuredModel = models[0];
+                this.log.info(
+                    `No model configured — using "${models[0]}" from the server${
+                        models.length > 1 ? ` (available: ${models.join(', ')})` : ''
+                    }. Select a model in the adapter settings to choose another.`,
+                );
+                return models[0];
+            })
+            .catch(e => {
+                this.modelLookup = null; // let the next request try again (server may still be starting)
+                throw new Error(
+                    `No model configured — select one in the adapter settings (lookup failed: ${(e as Error).message})`,
+                );
+            });
+        return this.modelLookup;
+    }
+
     /**
      * `systemPrompt` overrides the configured one for this call (e.g. to inject a device list).
      * `history` are prior turns (user/assistant) prepended so the model can resolve follow-ups.
@@ -100,6 +149,7 @@ export class LlmAgent {
         systemPrompt?: string,
         history: { role: 'user' | 'assistant'; content: string }[] = [],
     ): Promise<string> {
+        await this.ensureModel();
         this.log.debug(`llm ask [${this.provider}/${this.model}] (${history.length} history): ${question}`);
         const started = Date.now();
         const sys = systemPrompt ?? this.systemPrompt;
@@ -131,6 +181,7 @@ export class LlmAgent {
      * (translate/rephrase/classify) all run through here.
      */
     private async complete(prompt: string, maxTokens: number): Promise<string> {
+        await this.ensureModel();
         if (this.provider === 'anthropic') {
             const client = this.anthropic as Anthropic;
             const resp: any = await client.messages.create({
@@ -254,7 +305,7 @@ export class LlmAgent {
             if (this.provider === 'anthropic') {
                 const client = this.anthropic as Anthropic;
                 await client.messages.create({
-                    model: this.model,
+                    model: await this.ensureModel(),
                     max_tokens: 1,
                     messages: [{ role: 'user', content: 'ping' }],
                 });

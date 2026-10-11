@@ -1,7 +1,8 @@
 import type { TriggerDef } from './lib/triggers';
 
 export interface AdapterConfig {
-    provider: 'openai' | 'anthropic' | 'gemini' | 'deepseek' | 'custom';
+    /** `none` = no cloud LLM, only the local tiers answer. */
+    provider: 'openai' | 'anthropic' | 'gemini' | 'deepseek' | 'custom' | 'none';
     /**
      * Where the API key comes from:
      *  - 'manual':  stored directly in `apiKey` (encryptedNative/protectedNative)

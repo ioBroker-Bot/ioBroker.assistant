@@ -140,5 +140,7 @@
   "e.g. de_DE-thorsten-medium, ru_RU-irina-medium. Empty = default per language.": "例如 de_DE-thorsten-medium、ru_RU-irina-medium。空值 = 每种语言的默认值。",
   "e.g. eu-central-1": "例如：eu-central-1",
   "e.g. gpt-4o-mini, gpt-4o, claude-sonnet-4-6": "例如gpt-4o-mini、gpt-4o、克劳德十四行诗-4-6",
-  "e.g. westeurope": "例如：西欧"
+  "e.g. westeurope": "例如：西欧",
+  "None (local only)": "无（仅本地）",
+  "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.": "没有 LLM 提供商时，只有本地层级会作答：基于规则的命令、例程、定时器和闹钟，以及已启用的本地模型。其他请求只会得到一句简短的“我做不到”。"
 }

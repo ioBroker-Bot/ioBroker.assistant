@@ -140,5 +140,7 @@
   "e.g. de_DE-thorsten-medium, ru_RU-irina-medium. Empty = default per language.": "bijv. de_DE-thorsten-medium, ru_RU-irina-medium. Leeg = standaardwaarde per taal.",
   "e.g. eu-central-1": "bijv. eu-central-1",
   "e.g. gpt-4o-mini, gpt-4o, claude-sonnet-4-6": "bijv. gpt-4o-mini, gpt-4o, claude-sonnet-4-6",
-  "e.g. westeurope": "bijv. West-Europa"
+  "e.g. westeurope": "bijv. West-Europa",
+  "None (local only)": "Geen (alleen lokaal)",
+  "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.": "Zonder LLM-provider antwoorden alleen de lokale niveaus: de op regels gebaseerde opdrachten, routines, timers en wekkers, en het lokale model indien ingeschakeld. Al het andere krijgt een kort \"Dat kan ik niet\"-antwoord."
 }

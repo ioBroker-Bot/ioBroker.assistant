@@ -56,7 +56,12 @@ Every request runs through up to three tiers, stopping at the first that can ans
 ### Providers
 
 One active LLM provider: **OpenAI, Anthropic (Claude), Google Gemini, DeepSeek**, or any
-**OpenAI-compatible** endpoint (e.g. Groq, a local server) via a custom base URL.
+**OpenAI-compatible** endpoint (e.g. Groq, a local server) via a custom base URL. For a local server
+the API key and the model may stay empty: the model is then taken from the server's model list.
+
+**None (local only)** runs without any cloud LLM. Then only the local tiers answer — routines, the
+rule-based commands, timers and alarms, and the local model if enabled; everything else gets a short
+"I didn't understand that".
 
 ### Satellites (voice)
 

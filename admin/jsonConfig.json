@@ -20,7 +20,8 @@
                         { "label": "Anthropic (Claude)", "value": "anthropic" },
                         { "label": "Google Gemini", "value": "gemini" },
                         { "label": "DeepSeek", "value": "deepseek" },
-                        { "label": "OpenAI-compatible (custom)", "value": "custom" }
+                        { "label": "OpenAI-compatible (custom)", "value": "custom" },
+                        { "label": "None (local only)", "value": "none" }
                     ],
                     "default": "openai",
                     "sm": 12,
@@ -30,6 +31,7 @@
                     "newLine": true,
                     "type": "select",
                     "label": "Credential mode",
+                    "hidden": "data.provider === 'none'",
                     "options": [
                         { "label": "Store key in adapter", "value": "manual" },
                         { "label": "Central credential store", "value": "manager" }
@@ -41,7 +43,7 @@
                 "apiKey": {
                     "type": "password",
                     "label": "API key",
-                    "hidden": "data.credentialType === 'manager'",
+                    "hidden": "data.provider === 'none' || data.credentialType === 'manager'",
                     "sm": 12,
                     "md": 4
                 },
@@ -49,7 +51,7 @@
                     "type": "credential",
                     "credentialType": "ai",
                     "label": "API-key credential",
-                    "hidden": "data.credentialType !== 'manager'",
+                    "hidden": "data.provider === 'none' || data.credentialType !== 'manager'",
                     "sm": 12,
                     "md": 4
                 },
@@ -62,6 +64,7 @@
                     "freeSolo": true,
                     "label": "Model",
                     "help": "Loaded from the provider (instance must run); you can also type a model id.",
+                    "hidden": "data.provider === 'none'",
                     "default": "gpt-4o-mini",
                     "sm": 12,
                     "md": 4
@@ -81,14 +84,23 @@
                     "command": "testApiConnection",
                     "jsonData": "{\"provider\":\"${data.provider}\",\"apiKey\":\"${data.apiKey}\",\"credentialType\":\"${data.credentialType}\",\"model\":\"${data.model}\",\"baseUrl\":\"${data.baseUrl}\",\"credentialId\":\"${data.credentialIdApiKey}\"}",
                     "variant": "outlined",
-                    "disabled": "data.credentialType === 'manager' ? !data.credentialIdApiKey : !data.apiKey",
+                    "hidden": "data.provider === 'none'",
+                    "disabled": "data.provider !== 'custom' && (data.credentialType === 'manager' ? !data.credentialIdApiKey : !data.apiKey)",
                     "sm": 12,
                     "md": 4
+                },
+                "_noneInfo": {
+                    "newLine": true,
+                    "type": "staticText",
+                    "text": "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.",
+                    "hidden": "data.provider !== 'none'",
+                    "sm": 12
                 },
                 "maxTokens": {
                     "newLine": true,
                     "type": "number",
                     "label": "Max tokens",
+                    "hidden": "data.provider === 'none'",
                     "default": 1024,
                     "min": 64,
                     "max": 8192,

@@ -627,7 +627,11 @@ unsere Provider (openai/anthropic, evtl. später gemini/deepseek/custom) reduzie
 
 ## Offene Entscheidungen
 
-- Provider: ✅ openai, anthropic, **gemini**, **deepseek**, custom. gemini/deepseek laufen über die
+- Provider: ✅ openai, anthropic, **gemini**, **deepseek**, custom, **none** (nur lokale Stufen:
+  `agent` bleibt `null`, MCP-Tools werden trotzdem gebaut, weil die NLU darüber schaltet; Bereitschaft
+  hängt deshalb an `this.ready`, nicht an `this.agent`; Rest-Anfragen → `localOnlyFallback()`, und das
+  lokale Modell übernimmt dann auch Folgefragen). `custom` braucht keinen Key (`effectiveApiKey`) und kein
+  Modell (`LlmAgent.ensureModel()` holt das erste aus `/models` — sonst schickte man `"model":""`). gemini/deepseek laufen über die
   OpenAI-kompatible SDK-Schiene mit fester baseUrl (`PROVIDER_PRESETS`/`resolveProvider` in `llm.ts`).
   **Single-Provider** (ein aktiver Provider) — bewusst so; „mehrere gleichzeitig" (wie `javascript`) nicht umgesetzt.
 - Offline-Betrieb nötig? (sonst rein Cloud → einfacher).

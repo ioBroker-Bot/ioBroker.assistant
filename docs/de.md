@@ -58,7 +58,13 @@ Jede Anfrage läuft durch bis zu drei Stufen und stoppt bei der ersten, die antw
 ### Anbieter
 
 Ein aktiver LLM-Anbieter: **OpenAI, Anthropic (Claude), Google Gemini, DeepSeek** oder ein beliebiger
-**OpenAI-kompatibler** Endpunkt (z. B. Groq, ein lokaler Server) über eine eigene Basis-URL.
+**OpenAI-kompatibler** Endpunkt (z. B. Groq, ein lokaler Server) über eine eigene Basis-URL. Bei einem
+lokalen Server dürfen API-Schlüssel und Modell leer bleiben: das Modell wird dann aus der Modell-Liste des
+Servers genommen.
+
+**Keiner (nur lokal)** läuft ganz ohne Cloud-LLM. Dann antworten nur die lokalen Stufen — Routinen, die
+regelbasierten Befehle, Timer und Wecker sowie das lokale Modell, falls aktiviert; alles andere bekommt ein
+kurzes „Das habe ich nicht verstanden“.
 
 ### Satelliten (Sprache)
 

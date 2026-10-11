@@ -11,7 +11,7 @@ import {
 import * as path from 'node:path';
 import { createInProcessMcp, type InProcessMcp } from '@iobroker/mcp-server';
 
-import { LlmAgent, resolveProvider } from './lib/llm';
+import { LlmAgent, effectiveApiKey, resolveProvider } from './lib/llm';
 import { buildMcpTools, deviceKey, ListCache, type Tool } from './lib/tools';
 import {
     Nlu,
@@ -228,7 +228,10 @@ interface DeviceListEntry {
 
 class Assistant extends Adapter {
     declare config: AdapterConfig;
+    /** Cloud LLM; `null` with provider "none" (local tiers only) or before `onReady` finished. */
     private agent: LlmAgent | null = null;
+    /** Set once `onReady` initialised the pipeline — with or without a cloud {@link agent}. */
+    private ready = false;
     private mcp: InProcessMcp | null = null;
     /** Short-TTL cache for the expensive device/room/function listings; invalidated on enum changes. */
     private listCache: ListCache | null = null;
@@ -314,9 +317,13 @@ class Assistant extends Adapter {
 
     private async onReady(): Promise<void> {
         const cfg = this.config;
-        const apiKey = await resolveApiKey(this, cfg);
+        // Provider "none": no cloud LLM at all — only the local tiers (routines, rule-based NLU, timers,
+        // alarms, the local model) answer. The ioBroker tools are still built: the NLU switches through them.
+        const provider = cfg.provider || 'openai';
+        const localOnly = provider === 'none';
+        const apiKey = localOnly ? '' : effectiveApiKey(cfg.provider, await resolveApiKey(this, cfg));
 
-        if (!apiKey) {
+        if (!localOnly && !apiKey) {
             this.log.warn(
                 cfg.credentialType === 'manager'
                     ? 'No credential selected (manager mode) — pick an API-key credential in the adapter settings.'
@@ -357,17 +364,19 @@ class Assistant extends Adapter {
             this.subscribeForeignObjects('enum.rooms.*');
             this.subscribeForeignObjects('enum.functions.*');
 
-            const prov = resolveProvider(cfg.provider, cfg.baseUrl);
-            this.agent = new LlmAgent({
-                provider: cfg.provider || 'openai',
-                apiKey,
-                model: cfg.model || prov.defaultModel,
-                baseUrl: prov.baseUrl,
-                systemPrompt: cfg.systemPrompt || '',
-                maxTokens: cfg.maxTokens || 1024,
-                tools,
-                log: this.log,
-            });
+            if (provider !== 'none') {
+                const prov = resolveProvider(provider, cfg.baseUrl);
+                this.agent = new LlmAgent({
+                    provider,
+                    apiKey,
+                    model: cfg.model || prov.defaultModel,
+                    baseUrl: prov.baseUrl,
+                    systemPrompt: cfg.systemPrompt || '',
+                    maxTokens: cfg.maxTokens || 1024,
+                    tools,
+                    log: this.log,
+                });
+            }
         } catch (e) {
             this.log.error(`Could not initialise assistant: ${(e as Error).message}`);
             await this.setStateAsync('info.connection', { val: false, ack: true });
@@ -375,6 +384,7 @@ class Assistant extends Adapter {
         }
 
         await this.setStateAsync('info.connection', { val: true, ack: true });
+        this.ready = true;
         this.subscribeStates('text.request');
         // Meta object backing this instance's file storage (so the admin can upload sound assets and the
         // adapter can read them back for timer/alarm jingles).
@@ -410,7 +420,11 @@ class Assistant extends Adapter {
         }
         await this.setupPresence();
         await this.setupTriggers();
-        this.log.info(`Assistant ready (provider=${cfg.provider}, model=${this.agent.model}).`);
+        this.log.info(
+            this.agent
+                ? `Assistant ready (provider=${cfg.provider}, model=${this.agent.model || 'auto'}).`
+                : 'Assistant ready without an LLM provider — answering locally only.',
+        );
 
         if (cfg.useLocalLlm) {
             void this.ensureLocalLlm(); // background: model load/download must not block onReady
@@ -1826,7 +1840,7 @@ class Assistant extends Adapter {
         if (!id.endsWith('.text.request')) {
             return;
         }
-        if (!this.agent) {
+        if (!this.ready) {
             return;
         }
 
@@ -2281,7 +2295,12 @@ class Assistant extends Adapter {
             const { text, targetLang } = (obj.message || {}) as { text?: string; targetLang?: string };
             if (!this.agent) {
                 if (obj.callback) {
-                    this.sendTo(obj.from, obj.command, { error: 'agent not ready' }, obj.callback);
+                    this.sendTo(
+                        obj.from,
+                        obj.command,
+                        { error: this.ready ? 'translating needs an LLM provider' : 'agent not ready' },
+                        obj.callback,
+                    );
                 }
                 return;
             }
@@ -2424,7 +2443,7 @@ class Assistant extends Adapter {
         // Origin for text.querySource: caller-provided (e.g. 'telegram:Max') or 'chat' for the admin chat.
         const source = (typeof message === 'string' ? '' : message?.source?.trim()) || 'chat';
 
-        if (!this.agent) {
+        if (!this.ready) {
             if (obj.callback) {
                 this.sendTo(obj.from, obj.command, { error: 'agent not ready' }, obj.callback);
             }
@@ -2595,8 +2614,9 @@ class Assistant extends Adapter {
         // Tier 1a: local LLM — answers general questions offline; emits HANDOFF for anything needing tools.
         // Skipped inside an ongoing conversation (history present): the tool-free local model gets no history,
         // so it would answer a follow-up like "yes" context-free and swallow it — let the cloud LLM (which has
-        // the thread and the tools) handle follow-ups instead.
-        if (this.config.useLocalLlm && this.localLlm && !history.length) {
+        // the thread and the tools) handle follow-ups instead. Without a cloud LLM there is nobody to hand
+        // follow-ups to, so the local model takes them too.
+        if (this.config.useLocalLlm && this.localLlm && (!history.length || !this.agent)) {
             try {
                 // The local model has no tools: without these lines it would invent the weather and guess
                 // who is at home.
@@ -2616,7 +2636,10 @@ class Assistant extends Adapter {
         // Tier 2: cloud LLM with full tool access. Inject a compact device list into the system prompt so
         // the model can act without a first `list_devices` round-trip (kept cached via prompt caching).
         if (!this.agent) {
-            throw new Error('agent not ready');
+            // Provider "none": no tier further down. Say so instead of failing — over voice an error is
+            // read out as a technical message.
+            this.log.info(`No local tier could answer and no LLM provider is configured (source='${source}').`);
+            return this.localOnlyFallback();
         }
         const ctx = await this.buildDeviceContext();
         const mem = this.buildMemoryContext();
@@ -2625,12 +2648,24 @@ class Assistant extends Adapter {
         const parts = [this.config.systemPrompt || '', followUp, mem, ctx].filter(Boolean);
         const sys = parts.length ? parts.join('\n\n') : undefined;
         this.log.info(
-            `Cloud LLM [${this.agent.model}] (source='${source}', context=${history.length} turn(s)${mem ? ', memory' : ''}${weather ? ', weather' : ''}${this.presence?.configured ? ', presence' : ''}) — running tool loop…`,
+            `Cloud LLM [${this.agent.model || 'auto'}] (source='${source}', context=${history.length} turn(s)${mem ? ', memory' : ''}${weather ? ', weather' : ''}${this.presence?.configured ? ', presence' : ''}) — running tool loop…`,
         );
         // Prepend the current date/time (and the weather line, if a source is configured) to the user turn —
         // cache-safe, see buildTimeContext. The stored history keeps the untouched question.
         const questionForLlm = [this.buildTimeContext(), weather, question].filter(Boolean).join('\n\n');
         return this.agent.ask(questionForLlm, sys, history);
+    }
+
+    /** Reply when nothing local understood the request and there is no cloud LLM (provider "none"). */
+    private localOnlyFallback(): string {
+        const lang = String(this.config.voiceLanguage || this.language || 'en');
+        if (lang === 'ru') {
+            return 'Извини, этого я не поняла. Без облачной языковой модели я понимаю только простые команды для устройств, таймеры и будильники.';
+        }
+        if (lang === 'de') {
+            return 'Das habe ich leider nicht verstanden. Ohne Cloud-Sprachmodell verstehe ich nur einfache Gerätebefehle, Timer und Wecker.';
+        }
+        return "Sorry, I didn't understand that. Without a cloud language model I only understand simple device commands, timers and alarms.";
     }
 
     /**
@@ -5233,11 +5268,17 @@ class Assistant extends Adapter {
     }): Promise<string[]> {
         const cfg = this.config;
         const provider = msg.provider || cfg.provider || 'openai';
-        const apiKey = await resolveApiKey(this, cfg, {
-            credentialType: msg.credentialType,
-            apiKey: msg.apiKey,
-            credentialId: msg.credentialId,
-        });
+        if (provider === 'none') {
+            return [];
+        }
+        const apiKey = effectiveApiKey(
+            provider,
+            await resolveApiKey(this, cfg, {
+                credentialType: msg.credentialType,
+                apiKey: msg.apiKey,
+                credentialId: msg.credentialId,
+            }),
+        );
         if (!apiKey) {
             return [];
         }
@@ -5269,11 +5310,17 @@ class Assistant extends Adapter {
     }): Promise<{ result?: string; error?: string }> {
         const cfg = this.config;
         const provider = msg.provider || cfg.provider || 'openai';
-        const apiKey = await resolveApiKey(this, cfg, {
-            credentialType: msg.credentialType,
-            apiKey: msg.apiKey,
-            credentialId: msg.credentialId,
-        });
+        if (provider === 'none') {
+            return { error: 'No LLM provider selected.' };
+        }
+        const apiKey = effectiveApiKey(
+            provider,
+            await resolveApiKey(this, cfg, {
+                credentialType: msg.credentialType,
+                apiKey: msg.apiKey,
+                credentialId: msg.credentialId,
+            }),
+        );
         if (!apiKey) {
             return { error: 'No API key / credential available.' };
         }

@@ -182,7 +182,7 @@ each one shows up under `assistant.0.satellites.*` like any other.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.0.0 (2026-10-11)
 * (@GermanBluefox) Use first model if not set
 * (@GermanBluefox) Allowed to run only with local LLM
 

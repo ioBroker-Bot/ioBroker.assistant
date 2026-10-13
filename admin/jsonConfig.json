@@ -503,7 +503,6 @@
                 "bind": {
                     "newLine": true,
                     "type": "ip",
-                    "freeSolo": true,
                     "label": "Bind address",
                     "help": "Interface the UDP voice server listens on. 0.0.0.0 = all interfaces; pick a specific host IP so satellites on the LAN can reach it.",
                     "default": "0.0.0.0",
@@ -588,8 +587,7 @@
                     "md": 3
                 },
                 "esphomeMediaHost": {
-                    "type": "ip",
-                    "freeSolo": true,
+                    "type": "text",
                     "label": "Media server address for the devices",
                     "help": "Host the satellites should fetch the audio from. Empty = use the address of each device connection automatically; set it only if the devices reach this machine under a different address (NAT, Docker, VLAN).",
                     "default": "",

@@ -54,7 +54,7 @@
   "Delay": "Delay",
   "Devices": "Devices",
   "Direct URL of a GGUF model. Leave empty for the default (Qwen2.5-1.5B-Instruct). Small models recommended on Raspberry Pi / arm64.": "Direct URL of a GGUF model. Leave empty for the default (Qwen2.5-1.5B-Instruct). Small models recommended on Raspberry Pi / arm64.",
-  "Downloads the engine and model (several hundred MB). Watch the instance log for progress.": "Downloads the engine and model (several hundred MB). Watch the instance log for progress.",
+  "Downloads the engine and model (several hundred MB). Progress is shown below.": "Downloads the engine and model (several hundred MB). Progress is shown below.",
   "ESPHome satellites": "ESPHome satellites",
   "ESPHome satellites do not get the reply over their API socket — they fetch it as a URL. This is the port that small HTTP server listens on.": "ESPHome satellites do not get the reply over their API socket — they fetch it as a URL. This is the port that small HTTP server listens on.",
   "Empty = tts-1. Also: tts-1-hd, gpt-4o-mini-tts.": "Empty = tts-1. Also: tts-1-hd, gpt-4o-mini-tts.",
@@ -181,5 +181,6 @@
   "e.g. gpt-4o-mini, gpt-4o, claude-sonnet-4-6": "e.g. gpt-4o-mini, gpt-4o, claude-sonnet-4-6",
   "e.g. westeurope": "e.g. westeurope",
   "None (local only)": "None (local only)",
-  "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.": "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply."
+  "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.": "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.",
+  "Chat": "Chat"
 }

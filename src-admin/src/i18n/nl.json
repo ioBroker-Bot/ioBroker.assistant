@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "verwerking",
     "custom_assistant_sat_speaking": "spreken",
     "custom_assistant_type": "Type",
-    "custom_assistant_wake_word_hint": "The wake word runs on the device. Hover a word to see which languages it was trained on — most are English only.",
+    "custom_assistant_wake_word_hint": "Het activeringswoord draait op het apparaat. Beweeg de muis over een woord om te zien in welke talen het getraind is — de meeste alleen Engels.",
     "custom_assistant_write": "Schrijven"
 }

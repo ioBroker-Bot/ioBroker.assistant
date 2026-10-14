@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "加工",
     "custom_assistant_sat_speaking": "请讲",
     "custom_assistant_type": "类型",
-    "custom_assistant_wake_word_hint": "The wake word runs on the device. Hover a word to see which languages it was trained on — most are English only.",
+    "custom_assistant_wake_word_hint": "唤醒词在设备上运行。将鼠标悬停在某个词上可查看它训练所用的语言——大多数仅支持英语。",
     "custom_assistant_write": "写"
 }

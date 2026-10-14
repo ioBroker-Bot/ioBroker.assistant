@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "обробка",
     "custom_assistant_sat_speaking": "розмова",
     "custom_assistant_type": "Тип",
-    "custom_assistant_wake_word_hint": "The wake word runs on the device. Hover a word to see which languages it was trained on — most are English only.",
+    "custom_assistant_wake_word_hint": "Слово активації обробляється на пристрої. Наведіть курсор на слово, щоб побачити, якими мовами його навчено — більшість лише англійською.",
     "custom_assistant_write": "Написати"
 }

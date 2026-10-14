@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "elaborazione",
     "custom_assistant_sat_speaking": "A proposito di",
     "custom_assistant_type": "Tipo",
-    "custom_assistant_wake_word_hint": "The wake word runs on the device. Hover a word to see which languages it was trained on — most are English only.",
+    "custom_assistant_wake_word_hint": "La parola di attivazione viene elaborata sul dispositivo. Passa il mouse su una parola per vedere in quali lingue è stata addestrata — la maggior parte solo in inglese.",
     "custom_assistant_write": "Scrivere"
 }

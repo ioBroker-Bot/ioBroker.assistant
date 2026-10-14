@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "обработка",
     "custom_assistant_sat_speaking": "Говорящий",
     "custom_assistant_type": "Тип",
-    "custom_assistant_wake_word_hint": "Слово активации работает на устройстве. Наведите курсор на слово, чтобы увидеть языки — большинство только английский.",
+    "custom_assistant_wake_word_hint": "Слово активации обрабатывается на устройстве. Наведите курсор на слово, чтобы увидеть, на каких языках оно обучено — большинство только на английском.",
     "custom_assistant_write": "Писать"
 }

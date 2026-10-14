@@ -19,6 +19,13 @@ Langfristig sollen auch TTS/STT-Engines, Satelliten-Audio und Wake-Word hier hin
 Voll ausgebautes create-adapter-TS-Projekt, **Build ist grün** (`npm run build`).
 
 **Fertig:**
+- **Belegte Ports an js-controller 8 melden** — `common.declareUsedResources: true` + `main.ts.declarePort()`
+  nach jedem erfolgreichen Server-Start: UDP-Satelliten (`udpPort`, family 4), Wyoming (`tcpPort`),
+  ESPHome-Media-Server (`tcpPort`, tatsächlich gebundener Port). **Ohne das Flag** leitet der Controller aus
+  `native.port` (7775) einen *TCP*-Port ab — falsch (UDP) und meist gar nicht offen. Wildcard-Bind wird nicht
+  mitgeschickt (= alle Adressen). Gated über `supportsFeature('CONTROLLER_USED_RESOURCES')`, Cast, weil
+  `@iobroker/types` 7.2.2 die API noch nicht kennt; Fehler nur `debug`. Kein Freigeben beim Stop nötig (Host
+  macht das). Doku: `ioBroker.js-controller/docs/used-resources.md`.
 - **Quick Wins aus dem Hannah-Abgleich (alle zehn)** — vier neue Module plus Erweiterungen:
   - `src/lib/voice/ttsCache.ts` — `CachedTts` umhüllt **jede** TTS-Engine (in `engines.ts.createTtsEngine`,
     damit Satelliten, Durchsagen, Test-Chat und `tts`-sendTo dasselbe Verhalten haben): Plattencache

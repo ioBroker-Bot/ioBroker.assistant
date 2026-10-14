@@ -475,6 +475,7 @@ class Assistant extends Adapter {
                 log: this.log,
             });
             await this.wyoming.start();
+            this.declarePort('tcpPort', cfg.wyomingPort || 10700, cfg.bind);
             if (!this.voice) {
                 this.warmupEngines(stt, tts, language); // only if the UDP server didn't already warm up
             }
@@ -518,6 +519,7 @@ class Assistant extends Adapter {
             });
             await media.start();
             this.media = media;
+            this.declarePort('tcpPort', media.port, cfg.bind);
         } catch (e) {
             this.log.error(`ESPHome satellites not started — media server failed: ${(e as Error).message}`);
             this.media = null;
@@ -625,6 +627,7 @@ class Assistant extends Adapter {
                 },
             });
             await this.voice.start();
+            this.declarePort('udpPort', cfg.port || 7775, cfg.bind, 4); // dgram 'udp4' socket
             this.log.info(`Voice server: STT=${cfg.sttProvider || 'openai'}, TTS=${cfg.ttsProvider || 'openai'}.`);
             // Warm up local engines now (install/download) instead of on the first spoken command.
             this.warmupEngines(stt, tts, language);
@@ -2704,6 +2707,37 @@ class Assistant extends Adapter {
                   ? 'Bekannte Geräte — "Name (Raum, Typ): stateId". Nutze diese stateIds direkt mit set_state/get_states; rufe list_devices nur, wenn ein Gerät hier fehlt.'
                   : 'Known devices — "name (room, type): stateId". Use these stateIds directly with set_state/get_states; only call list_devices if a needed device is missing here.';
         return `${header}\n${lines.join('\n')}`;
+    }
+
+    /**
+     * List a port we listen on in the host's used-resources registry (js-controller ≥ 8), so the admin shows it
+     * as occupied when someone configures another instance. `common.declareUsedResources` is set because the
+     * controller would otherwise derive a TCP port from `native.port` — ours is the UDP satellite port and is
+     * usually not open at all. Nothing to free on shutdown: the host unblocks our entries when the process exits
+     * and drops them on the next start. Best effort — the registry is a hint, it must never keep a server down.
+     */
+    private declarePort(type: 'tcpPort' | 'udpPort', port: number, bind: string, family?: 4): void {
+        const api = this as unknown as {
+            supportsFeature(feature: string): boolean;
+            registerUsedResource?(
+                type: 'tcpPort' | 'udpPort',
+                data: { port: number; bind?: string; family?: 4 | 6 },
+            ): Promise<void>;
+        };
+        if (!api.registerUsedResource || !api.supportsFeature('CONTROLLER_USED_RESOURCES')) {
+            return;
+        }
+        // A wildcard bind is left out: "not named" means every address, which is what 0.0.0.0/:: occupies.
+        const data: { port: number; bind?: string; family?: 4 | 6 } = { port };
+        if (bind && bind !== '0.0.0.0' && bind !== '::') {
+            data.bind = bind;
+        }
+        if (family) {
+            data.family = family;
+        }
+        api.registerUsedResource(type, data).catch(e =>
+            this.log.debug(`could not register ${type} ${port}: ${(e as Error).message}`),
+        );
     }
 
     /** Writable per-instance data dir via the adapter-core function (with a fallback for old runtimes). */

@@ -182,6 +182,10 @@ each one shows up under `assistant.0.satellites.*` like any other.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Added the missing translations and the sizes for all screens to the settings. The tests run on Windows and macOS too
+* (@GermanBluefox) The ports the adapter really opens (UDP satellites, Wyoming, ESPHome media server) are reported to js-controller 8 as used resources; the satellite port in the settings is no longer listed as an occupied TCP port
+
 ### 1.0.1 (2026-10-13)
 * (@GermanBluefox) Use first model if not set
 * (@GermanBluefox) Allowed to run only with local LLM

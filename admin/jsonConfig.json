@@ -9,7 +9,12 @@
                 "_header": {
                     "type": "header",
                     "size": 2,
-                    "text": "LLM assistant"
+                    "text": "LLM assistant",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "provider": {
                     "newLine": true,
@@ -24,8 +29,11 @@
                         { "label": "None (local only)", "value": "none" }
                     ],
                     "default": "openai",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "credentialType": {
                     "newLine": true,
@@ -37,23 +45,32 @@
                         { "label": "Central credential store", "value": "manager" }
                     ],
                     "default": "manual",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "apiKey": {
                     "type": "password",
                     "label": "API key",
                     "hidden": "data.provider === 'none' || data.credentialType === 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "credentialIdApiKey": {
                     "type": "credential",
                     "credentialType": "ai",
                     "label": "API-key credential",
                     "hidden": "data.provider === 'none' || data.credentialType !== 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "model": {
                     "newLine": true,
@@ -66,16 +83,22 @@
                     "help": "Loaded from the provider (instance must run); you can also type a model id.",
                     "hidden": "data.provider === 'none'",
                     "default": "gpt-4o-mini",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "baseUrl": {
                     "type": "text",
                     "label": "Base URL (optional)",
                     "help": "Override the endpoint, e.g. https://api.groq.com/openai/v1 for Groq. Leave empty for the provider default.",
                     "hidden": "data.provider !== 'custom'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 8
+                    "md": 8,
+                    "lg": 8,
+                    "xl": 8
                 },
                 "_testConnection": {
                     "newLine": true,
@@ -86,15 +109,22 @@
                     "variant": "outlined",
                     "hidden": "data.provider === 'none'",
                     "disabled": "data.provider !== 'custom' && (data.credentialType === 'manager' ? !data.credentialIdApiKey : !data.apiKey)",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_noneInfo": {
                     "newLine": true,
                     "type": "staticText",
                     "text": "Without an LLM provider only the local tiers answer: the rule-based commands, routines, timers and alarms, and the local model if enabled. Anything else gets a short \"I can't do that\" reply.",
                     "hidden": "data.provider !== 'none'",
-                    "sm": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "maxTokens": {
                     "newLine": true,
@@ -104,16 +134,22 @@
                     "default": 1024,
                     "min": 64,
                     "max": 8192,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 2
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "useLocalNlu": {
                     "type": "checkbox",
                     "label": "Answer simple commands locally (fast, offline)",
                     "help": "Try the built-in rule-based intent matching for turn on/off, dimming and status before calling the LLM.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "confirmWithTone": {
                     "type": "checkbox",
@@ -121,16 +157,22 @@
                     "help": "A successful switch command is confirmed by a short tone on the satellite instead of a spoken sentence - instant, where speaking costs a text-to-speech call. Questions, errors and the text channels are unaffected.",
                     "default": false,
                     "hidden": "!data.useLocalNlu",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "nluAliases": {
                     "type": "table",
                     "label": "Synonym dictionary",
                     "help": "Rewrite spoken or typed variants to your device/room names before local matching, e.g. \"TV\" to \"Fernseher\". Leave the language empty to apply to all languages. Also used for the text channels.",
                     "hidden": "!data.useLocalNlu",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "from", "title": "Said or typed", "width": "40%" },
                         { "type": "text", "attr": "to", "title": "Canonical term", "width": "40%" },
@@ -142,8 +184,11 @@
                     "type": "table",
                     "label": "Routines",
                     "help": "A phrase that runs a list of actions: \"Gute Nacht\" switches off five things and answers once. Phrases: several separated by commas (matched anywhere in the sentence, upper/lower case and umlauts do not matter). Actions as JSON, same shape as a trigger: [{\"setState\":{\"id\":\"hm-rpc.0.ABC.1.STATE\",\"value\":false}},{\"say\":\"Schlaf gut\",\"room\":\"Schlafzimmer\"}]. Reply: what the assistant answers (leave empty to stay silent). Matched before the offline rule engine and before the LLM, so a routine is never reinterpreted.",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "name", "title": "Name", "width": "15%" },
                         { "type": "text", "attr": "phrases", "title": "Phrases (comma separated)", "width": "30%" },
@@ -156,16 +201,22 @@
                     "label": "Remember the conversation (follow-up questions)",
                     "help": "Keep the last few turns per source (chat, telegram, satellite) for a few minutes so follow-ups like 'and the kitchen too' work. In-memory only.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "useLongTermMemory": {
                     "type": "checkbox",
                     "label": "Long-term memory (remember facts across sessions)",
                     "help": "Lets the assistant durably remember facts you tell it (names, preferences, where things are) and use them in later conversations. Stored in the memory.* states; the LLM gets remember/forget tools.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "weatherInstance": {
                     "newLine": true,
@@ -173,16 +224,22 @@
                     "command": "getWeatherInstances",
                     "label": "Weather source",
                     "help": "Pick an installed weather adapter to answer weather questions from (Open-Meteo, Weather Underground, OpenWeatherMap are fully understood; others are read best-effort). Start that adapter once so its data/locations appear here.",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "presence": {
                     "newLine": true,
                     "type": "table",
                     "label": "Presence",
                     "help": "Which states tell the assistant who is at home - one row per person. Any state works: the residents adapter, a phone ping like ping.0.phone-denis.alive, a router client state or your own flag. Kind: empty or person, guest, pet (a pet never makes the house occupied). Home value: leave empty for the usual forms (true, 1, \"home\", \"anwesend\"), or enter the exact value that means at home. Used to tell the LLM who is around, to hold back announcements to an empty house (notify with onlyWhenHome) and as a trigger source via presence.anyoneHome.",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "id", "title": "State id", "width": "45%" },
                         { "type": "text", "attr": "name", "title": "Name", "width": "25%" },
@@ -196,16 +253,22 @@
                     "label": "Announce when a timer expires",
                     "help": "Speak an announcement on the satellite a countdown timer was set from (or on all satellites) when it runs out. Timers are always mirrored into the timers.* states for scripts and visualization.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "alarmAnnounce": {
                     "type": "checkbox",
                     "label": "Announce when an alarm goes off",
                     "help": "Speak an announcement when an alarm at a fixed clock time fires. Alarms are always mirrored into the alarms.* states for scripts and visualization.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "notifyRephrase": {
                     "newLine": true,
@@ -213,15 +276,21 @@
                     "label": "Reword system notifications",
                     "help": "Spoken system notifications (notify.text / the ioBroker notification manager) are reworded by the LLM into one natural sentence first - their raw texts are written for a log viewer. Costs one small LLM call per notification; the original text is spoken if it fails. Urgent ones (notify.alert) are announced even when Do-Not-Disturb is on.",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_soundsHint": {
                     "newLine": true,
                     "type": "staticText",
                     "text": "Two default sounds (timer.wav, alarm.wav) are preinstalled — pick one below or upload your own mp3/wav. The selected sound plays before the spoken announcement. Needs ffmpeg on the host and at least one satellite.",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 12
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "ringSeconds": {
                     "newLine": true,
@@ -231,8 +300,11 @@
                     "default": 60,
                     "min": 0,
                     "max": 600,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "timerSound": {
                     "newLine": true,
@@ -245,8 +317,11 @@
                     "refresh": true,
                     "maxSize": 5242880,
                     "label": "Timer sound (mp3/wav, optional)",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "_playTimerSound": {
                     "type": "sendTo",
@@ -255,8 +330,11 @@
                     "variant": "outlined",
                     "jsonData": "{\"name\":\"${data.timerSound}\"}",
                     "disabled": "!data.timerSound",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 2
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "alarmSound": {
                     "newLine": true,
@@ -269,8 +347,11 @@
                     "refresh": true,
                     "maxSize": 5242880,
                     "label": "Alarm sound (mp3/wav, optional)",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "_playAlarmSound": {
                     "type": "sendTo",
@@ -279,8 +360,11 @@
                     "variant": "outlined",
                     "jsonData": "{\"name\":\"${data.alarmSound}\"}",
                     "disabled": "!data.alarmSound",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 2
+                    "md": 2,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "useLocalLlm": {
                     "newLine": true,
@@ -288,16 +372,22 @@
                     "label": "Use a local LLM before the cloud (installed on demand)",
                     "help": "Runs a small local model (node-llama-cpp) for general questions; escalates to the cloud LLM when it needs live device data. Install it with the button below.",
                     "default": false,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "localLlmModelUrl": {
                     "type": "text",
                     "label": "Local model URL (GGUF, optional)",
                     "help": "Direct URL of a GGUF model. Leave empty for the default (Qwen2.5-1.5B-Instruct). Small models recommended on Raspberry Pi / arm64.",
                     "hidden": "!data.useLocalLlm",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "_installLocalLlm": {
                     "newLine": true,
@@ -309,8 +399,11 @@
                     "showProcess": true,
                     "timeout": 600000,
                     "help": "Downloads the engine and model (several hundred MB). Progress is shown below.",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_localLlmProgress": {
                     "newLine": true,
@@ -321,14 +414,22 @@
                     "bundlerType": "module",
                     "guiApi": 2,
                     "hidden": "!data.useLocalLlm",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 8
+                    "md": 8,
+                    "lg": 8,
+                    "xl": 8
                 },
                 "_accessHeader": {
                     "newLine": true,
                     "type": "header",
                     "size": 2,
-                    "text": "Access / permissions"
+                    "text": "Access / permissions",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "readObjects": {
                     "newLine": true,
@@ -339,16 +440,22 @@
                         { "label": "Any object (get_object/search_objects)", "value": "all" }
                     ],
                     "default": "devices",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "allowWriteStates": {
                     "newLine": true,
                     "type": "checkbox",
                     "label": "Allow writing states (control devices)",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "verifyWrites": {
                     "type": "checkbox",
@@ -356,61 +463,85 @@
                     "help": "After a switch command, wait up to 2 seconds for the device to acknowledge the new value (ack:true) and report \"did not respond\" if it never does. Leave this off for devices that never acknowledge (MQTT, scripts, 0_userdata) - every command would look failed.",
                     "default": false,
                     "hidden": "!data.allowWriteStates",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "allowHistory": {
                     "type": "checkbox",
                     "label": "Allow reading history",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "allowReadLogs": {
                     "newLine": true,
                     "type": "checkbox",
                     "label": "Allow reading logs",
                     "default": false,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "allowWriteLogs": {
                     "type": "checkbox",
                     "label": "Allow writing to the log",
                     "default": false,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "allowFiles": {
                     "newLine": true,
                     "type": "checkbox",
                     "label": "Allow reading files",
                     "default": false,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "allowSystemInfo": {
                     "type": "checkbox",
                     "label": "Allow system info (hosts, instances, adapters)",
                     "default": true,
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "allowObjectChange": {
                     "newLine": true,
                     "type": "checkbox",
                     "label": "Allow changing objects and files (dangerous)",
                     "default": false,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "systemPrompt": {
                     "newLine": true,
                     "type": "text",
                     "label": "System prompt",
                     "minRows": 4,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 12
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -425,7 +556,11 @@
                     "name": "ConfigCustomAssistant/Components/DeviceAclComponent",
                     "guiApi": 2,
                     "bundlerType": "module",
-                    "sm": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -436,19 +571,31 @@
                 "_triggersHeader": {
                     "type": "header",
                     "text": "Proactive triggers",
-                    "size": 2
+                    "size": 2,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_triggersHint": {
                     "type": "staticText",
                     "text": "A trigger watches states or the clock and then speaks, writes a state, or asks you a question and acts on your answer. Switch single triggers off at runtime with triggers.items.<id>.enabled, test one with its fire button, and all of them with triggers.enabled.",
-                    "sm": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "triggers": {
                     "type": "table",
                     "label": "Triggers",
                     "help": "Condition as JSON: {\"state\":\"javascript.0.window\",\"value\":true} or {\"time\":\"23:00\",\"days\":[1,2,3,4,5]}; add \"also\"/\"unless\" for extra or blocking conditions, or use a list for alternatives. Say = announcement, Ask = question (needs response rules, JSON: [{\"match\":\"agreement\",\"say\":\"Okay\",\"setState\":{\"id\":\"...\",\"value\":false}}]). Extra actions as JSON: [{\"setState\":{\"id\":\"...\",\"value\":false}}]. Delay waits before acting (90s/30m/5h), cooldown is the minimum gap between two firings in seconds (default 3600).",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "id", "title": "Id", "width": "8%" },
                         { "type": "text", "attr": "name", "title": "Name", "width": "12%" },
@@ -467,8 +614,11 @@
                     "label": "Let the LLM reword trigger texts",
                     "help": "Before a trigger speaks, the model rewords its text so repeated announcements do not sound canned. Costs one small LLM call per announcement; the original text is used if it fails.",
                     "default": false,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 }
             }
         },
@@ -479,7 +629,12 @@
                 "_voiceHeader": {
                     "type": "header",
                     "size": 2,
-                    "text": "Voice satellites"
+                    "text": "Voice satellites",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "voiceEnabled": {
                     "newLine": true,
@@ -487,8 +642,11 @@
                     "label": "Enable voice (STT/TTS for satellites)",
                     "help": "Enables speech recognition/synthesis. ioBroker-native satellites reach it over the message bus — no port needed. Turn on the UDP server below only for ESP / Hannah satellites.",
                     "default": false,
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "udpServerEnabled": {
                     "newLine": true,
@@ -497,8 +655,11 @@
                     "help": "Opens a UDP port for streaming microphone satellites (Hannah-compatible / ESP). Not needed for ioBroker-native satellites.",
                     "default": false,
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "bind": {
                     "newLine": true,
@@ -508,8 +669,11 @@
                     "default": "0.0.0.0",
                     "listenOnAllPorts": true,
                     "hidden": "!data.voiceEnabled || !data.udpServerEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "port": {
                     "type": "number",
@@ -518,8 +682,11 @@
                     "min": 1,
                     "max": 65535,
                     "hidden": "!data.voiceEnabled || !data.udpServerEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "wyomingEnabled": {
                     "newLine": true,
@@ -528,8 +695,11 @@
                     "help": "Home Assistant Voice PE / wyoming-satellite / ESPHome voice devices can stream to this adapter over the Wyoming protocol.",
                     "default": false,
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 8,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "wyomingPort": {
                     "type": "number",
@@ -538,8 +708,11 @@
                     "min": 1,
                     "max": 65535,
                     "hidden": "!data.voiceEnabled || !data.wyomingEnabled",
+                    "xs": 12,
                     "sm": 4,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "esphomeEnabled": {
                     "newLine": true,
@@ -548,8 +721,11 @@
                     "help": "ThirdReality Voice & Music Assistant, Home Assistant Voice PE, linux-voice-assistant. These devices listen on TCP 6053 and the adapter dials them, so no port is opened for the audio itself — only the media server below, which they fetch the spoken reply from.",
                     "default": false,
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "esphomeDevices": {
                     "newLine": true,
@@ -557,8 +733,11 @@
                     "label": "ESPHome satellites",
                     "help": "One row per device. Port empty = 6053. The room is what the assistant treats the satellite as being in. Leave the password empty unless the device really has an API password set — table values are stored unencrypted.",
                     "hidden": "!data.voiceEnabled || !data.esphomeEnabled",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "ip", "title": "Address (IP or host name)", "width": "30%" },
                         {
@@ -583,8 +762,11 @@
                     "min": 1,
                     "max": 65535,
                     "hidden": "!data.voiceEnabled || !data.esphomeEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "esphomeMediaHost": {
                     "type": "text",
@@ -592,8 +774,11 @@
                     "help": "Host the satellites should fetch the audio from. Empty = use the address of each device connection automatically; set it only if the devices reach this machine under a different address (NAT, Docker, VLAN).",
                     "default": "",
                     "hidden": "!data.voiceEnabled || !data.esphomeEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "esphomeSilenceMs": {
                     "type": "number",
@@ -603,8 +788,11 @@
                     "min": 200,
                     "max": 5000,
                     "hidden": "!data.voiceEnabled || !data.esphomeEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "voiceLanguage": {
                     "newLine": true,
@@ -627,8 +815,11 @@
                     ],
                     "default": "",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "announceTargets": {
                     "newLine": true,
@@ -636,8 +827,11 @@
                     "label": "Announcement targets (groups and people)",
                     "help": "Give a set of satellites a name, so an announcement, a question or a trigger can address it: a group of rooms (\"Upstairs\") or the speakers that belong to one person (\"Denis\", so \"tell Denis dinner is ready\" reaches them). Members: satellite ids, room names or device names, separated by commas. Kind: empty or group, or person. A real satellite or room of the same name always wins, so a group can never make a speaker unreachable.",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
+                    "lg": 12,
+                    "xl": 12,
                     "items": [
                         { "type": "text", "attr": "name", "title": "Name", "width": "25%" },
                         {
@@ -661,8 +855,11 @@
                     ],
                     "default": "openai",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "ttsProvider": {
                     "type": "select",
@@ -675,8 +872,11 @@
                     ],
                     "default": "openai",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "sttFallback": {
                     "newLine": true,
@@ -692,8 +892,11 @@
                     ],
                     "default": "",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "ttsFallback": {
                     "type": "select",
@@ -708,8 +911,11 @@
                     ],
                     "default": "",
                     "hidden": "!data.voiceEnabled",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "voiceCredentialType": {
                     "newLine": true,
@@ -721,15 +927,23 @@
                     ],
                     "default": "manual",
                     "hidden": "!data.voiceEnabled || (data.sttProvider === 'vosk' && data.ttsProvider === 'piper')",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_openaiSpeechHeader": {
                     "newLine": true,
                     "type": "header",
                     "size": 3,
                     "text": "OpenAI speech",
-                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'openai' && data.ttsProvider !== 'openai')"
+                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'openai' && data.ttsProvider !== 'openai')",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "voiceApiKey": {
                     "newLine": true,
@@ -737,8 +951,11 @@
                     "label": "OpenAI key for speech (optional)",
                     "help": "Leave empty to reuse the main API key when the LLM provider is OpenAI; required otherwise.",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'openai' && data.ttsProvider !== 'openai') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 8
+                    "md": 8,
+                    "lg": 8,
+                    "xl": 8
                 },
                 "voiceCredentialId": {
                     "newLine": true,
@@ -746,8 +963,11 @@
                     "credentialType": "ai",
                     "label": "OpenAI credential",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'openai' && data.ttsProvider !== 'openai') || data.voiceCredentialType !== 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "ttsVoice": {
                     "newLine": true,
@@ -760,8 +980,11 @@
                     "help": "Loaded from the provider (instance must run); you can also type a voice id.",
                     "default": "alloy",
                     "hidden": "!data.voiceEnabled || data.ttsProvider !== 'openai'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "sttModel": {
                     "newLine": true,
@@ -769,39 +992,56 @@
                     "label": "OpenAI STT model (optional)",
                     "help": "Empty = whisper-1. Also: gpt-4o-transcribe, gpt-4o-mini-transcribe.",
                     "hidden": "!data.voiceEnabled || data.sttProvider !== 'openai'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "ttsModel": {
                     "type": "text",
                     "label": "OpenAI TTS model (optional)",
                     "help": "Empty = tts-1. Also: tts-1-hd, gpt-4o-mini-tts.",
                     "hidden": "!data.voiceEnabled || data.ttsProvider !== 'openai'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_azureSpeechHeader": {
                     "newLine": true,
                     "type": "header",
                     "size": 3,
                     "text": "Azure Speech",
-                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'azure' && data.ttsProvider !== 'azure')"
+                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'azure' && data.ttsProvider !== 'azure')",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "azureSpeechKey": {
                     "newLine": true,
                     "type": "password",
                     "label": "Azure subscription key",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'azure' && data.ttsProvider !== 'azure') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "azureSpeechRegion": {
                     "type": "text",
                     "label": "Azure region",
                     "help": "e.g. westeurope",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'azure' && data.ttsProvider !== 'azure') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "azureCredentialId": {
                     "newLine": true,
@@ -809,8 +1049,11 @@
                     "credentialType": "azure",
                     "label": "Azure credential",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'azure' && data.ttsProvider !== 'azure') || data.voiceCredentialType !== 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "azureVoice": {
                     "newLine": true,
@@ -829,38 +1072,55 @@
                     "label": "Azure voice (optional)",
                     "help": "Loaded from Azure (instance must run); empty = pick by language. e.g. de-DE-KatjaNeural.",
                     "hidden": "!data.voiceEnabled || data.ttsProvider !== 'azure'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "_awsSpeechHeader": {
                     "newLine": true,
                     "type": "header",
                     "size": 3,
                     "text": "AWS speech",
-                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws')"
+                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws')",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "awsAccessKeyId": {
                     "newLine": true,
                     "type": "text",
                     "label": "AWS access key id",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "awsSecretAccessKey": {
                     "type": "password",
                     "label": "AWS secret access key",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 4
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "awsRegion": {
                     "type": "text",
                     "label": "AWS region",
                     "help": "e.g. eu-central-1",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws') || data.voiceCredentialType === 'manager'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 3
+                    "md": 3,
+                    "lg": 3,
+                    "xl": 3
                 },
                 "awsCredentialId": {
                     "newLine": true,
@@ -868,8 +1128,11 @@
                     "credentialType": "aws",
                     "label": "AWS credential",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'aws' && data.ttsProvider !== 'aws') || data.voiceCredentialType !== 'manager'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "awsVoice": {
                     "newLine": true,
@@ -889,23 +1152,34 @@
                     "label": "AWS Polly voice (optional)",
                     "help": "Loaded from Polly (instance must run); empty = default per language. e.g. Vicki, Tatyana.",
                     "hidden": "!data.voiceEnabled || data.ttsProvider !== 'aws'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 },
                 "_localSpeechHeader": {
                     "newLine": true,
                     "type": "header",
                     "size": 3,
                     "text": "Local speech (no cloud)",
-                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'vosk' && data.ttsProvider !== 'piper')"
+                    "hidden": "!data.voiceEnabled || (data.sttProvider !== 'vosk' && data.ttsProvider !== 'piper')",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_localSpeechHint": {
                     "newLine": true,
                     "type": "staticText",
                     "text": "Vosk (STT) and Piper (TTS) run on this host. Models and the Piper binary are downloaded automatically on first use (needs internet, plus 'unzip'/'tar'). No API key required.",
                     "hidden": "!data.voiceEnabled || (data.sttProvider !== 'vosk' && data.ttsProvider !== 'piper')",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 12
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "voskModel": {
                     "newLine": true,
@@ -917,8 +1191,11 @@
                     "label": "Vosk model (optional)",
                     "help": "Model name from alphacephei.com/vosk/models, e.g. vosk-model-small-de-0.15. Empty = small default per language.",
                     "hidden": "!data.voiceEnabled || data.sttProvider !== 'vosk'",
+                    "xs": 12,
                     "sm": 12,
-                    "md": 6
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "piperVoice": {
                     "newLine": true,
@@ -930,8 +1207,11 @@
                     "label": "Piper voice (optional)",
                     "help": "e.g. de_DE-thorsten-medium, ru_RU-irina-medium. Empty = default per language.",
                     "hidden": "!data.voiceEnabled || data.ttsProvider !== 'piper'",
+                    "xs": 12,
                     "sm": 6,
-                    "md": 5
+                    "md": 5,
+                    "lg": 5,
+                    "xl": 5
                 }
             }
         },
@@ -946,7 +1226,11 @@
                     "name": "ConfigCustomAssistant/Components/ChatComponent",
                     "guiApi": 2,
                     "bundlerType": "module",
-                    "sm": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -961,7 +1245,11 @@
                     "name": "ConfigCustomAssistant/Components/SatellitesComponent",
                     "guiApi": 2,
                     "bundlerType": "module",
-                    "sm": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }

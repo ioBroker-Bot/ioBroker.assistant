@@ -60,6 +60,6 @@
     "custom_assistant_sat_processing": "traitement",
     "custom_assistant_sat_speaking": "Parlant",
     "custom_assistant_type": "Taper",
-    "custom_assistant_wake_word_hint": "The wake word runs on the device. Hover a word to see which languages it was trained on — most are English only.",
+    "custom_assistant_wake_word_hint": "Le mot d'activation s'exécute sur l'appareil. Survolez un mot pour voir dans quelles langues il a été entraîné — la plupart uniquement en anglais.",
     "custom_assistant_write": "Écrire"
 }
